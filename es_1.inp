@@ -1,8 +1,0 @@
-problem    o/f=2,2.5,3,3.5,4,4.5,5,
-    hp   p,bar=1,  t,k=3800
-react  
-  oxid=O2 wt=1  t,k=298.15  
-  fuel=CH4 wt=1  t,k=298.15  
-output  short transport 
-    plot t o/f  
-end

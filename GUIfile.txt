@@ -1,7 +1,0 @@
-problem   case=exam o/f=3,
-    hp   p,bar=10,  t,k=3800
-react  
-  fuel=H2 t,k=298.15  
-  oxid=O2 wt=1  t,k=298.15  
-output  massf short 
-end

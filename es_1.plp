@@ -1,8 +1,0 @@
-problem   case=es_1 r,eq.ratio=3,
-    hp   p,bar=0.1,1,10,100,  t,k=3800
-react  
-  oxid=O2 wt=1  t,k=298.15  
-  fuel=H2 wt=1  t,k=298.15  
-output  short transport 
-    plot p t m  
-end

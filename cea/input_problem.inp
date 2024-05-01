@@ -1,4 +1,4 @@
-problem   case=rocket o/f=10.000000,
+problem   case=rocket o/f=0.610300,
     rocket  fac   ma=1101.072141 
   p,psia=4812.000000,
 react  
