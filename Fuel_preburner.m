@@ -170,9 +170,55 @@ fprintf('\t\t- - - - - - - - - - - - - - - - - - - - - - - - - -');
 Ox_line_products = struct2table(Ox.products)
 Ox_line_properties = struct2table(Ox.properties)
 
+%% MAIN
+OX_m_dot_H2 = Ox.properties.m_dot*Ox.products.Mass_fraction(1)
+OX_m_dot_H2O = Ox.properties.m_dot*Ox.products.Mass_fraction(2)
+
+Fuel_m_dot_H2 = Fuel.properties.m_dot*Fuel.products.Mass_fraction(1)
+Fuel_m_dot_H2O = Fuel.properties.m_dot*Fuel.products.Mass_fraction(2)
+
+coolant_m_dot = 5+7.7;
+
+O2_main = struct('m_dot',[],'T',[],'P',[],'rho',[],'h',[],'Mf',[]);
+O2_main.m_dot = 380.6;
+O2_main.T = 104.3;
+O2_main.P = 24.03; % Pressure (Mpa)
+O2_main.rho = 1128.4;
+O2_main.h = -0.3685*31.9988;
 
 
+fprintf('\t\t- - - - - - - - - - - - - - - - - - - - - - - - - -\n');
+fprintf('\t\t- - - - - - - - - - - - - - - - - - - - - - - - - -\n');
 
+m_tot_fuel = (OX_m_dot_H2 + Fuel_m_dot_H2 + coolant_m_dot);
+m_tot_ox = O2_main.m_dot;
+m_tot = m_tot_fuel+m_tot_ox;
 
+mass_fraction_coolant = coolant_m_dot / m_tot;
+mass_fraction_fuel_H2 = Fuel_m_dot_H2 / m_tot;
+mass_fraction_ox_H2 = OX_m_dot_H2 / m_tot;
+mass_fraction_fuel_H2O = Fuel_m_dot_H2O / m_tot;
+mass_fraction_ox_H2O = OX_m_dot_H2O / m_tot;
+mass_fraction_main_O2 = O2_main.m_dot / m_tot;
 
+H2_cool = struct('Mf',mass_fraction_coolant,'T',255.4,'P',[]);
+H2_fuel = struct('Mf',mass_fraction_fuel_H2,'T',Fuel.properties.T_before_main,'P',Fuel.properties.P_bar);
+H2_ox = struct('Mf',mass_fraction_ox_H2,'T',Ox.properties.T_before_main,'P',Ox.properties.P_bar);
+O2_main.Mf = mass_fraction_main_O2;
+
+ae_at = 10:5:150;
+[sol,prod] = cea_main_input(H2_cool,H2_fuel,H2_ox,O2_main,2871,ae_at);
+%% plot
+subplot(2,2,1)
+plot(ae_at,sol.T,'LineWidth',2)
+title('T - ae/at')
+subplot(2,2,2)
+plot(ae_at,sol.cf,'LineWidth',2)
+title('cf - ae/at')
+subplot(2,2,3)
+plot(ae_at,sol.Isp_s,'LineWidth',2)
+title('Isp_sea - ae/at')
+subplot(2,2,4)
+plot(ae_at,sol.Isp_v,'LineWidth',2)
+title('Isp_vac - ae/at')
 

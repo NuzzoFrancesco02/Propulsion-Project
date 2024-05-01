@@ -1,0 +1,13 @@
+problem   case=%s,
+    rocket  equilibrium  frozen  nfz=2
+  p,psia=%f,
+  sup,ae/at=%d,
+react  
+  fuel=H2 wt=%f  t,k=%f
+  fuel=H2 wt=%f  t,k=%f
+  fuel=H2 wt=%f  t,k=%f
+  oxid=O2(cr)  wt=%f  t,k=%f
+    h,kj/mol=%f  O 2
+output  massf short
+    plot p t rho m cp gam mach cf isp
+end
