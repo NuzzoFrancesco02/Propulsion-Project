@@ -1,0 +1,8 @@
+problem   case=preburn_left o/f=0.97,
+    hp   p,psia=4793,  t,f=1310
+react  
+  fuel=H2 wt=1  t,k=161  
+  oxid=O2 wt=1  t,k=161  
+output  massf short 
+    plot t m cp gam p 
+end

@@ -1,0 +1,9 @@
+problem   case=mix_preburn o/f=7.765,
+    hp   p,bar=330.46,  t,f=1087
+react  
+  oxid=H2 wt=0.44557  t,k=1130.39  
+  oxid=H2O wt=0.55443  t,k=1130.39  
+  fuel=H2 wt=1  t,k=273.15  
+output  massf short 
+    plot p t m cp gam  
+ end

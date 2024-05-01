@@ -1,0 +1,11 @@
+problem   case=preburner_fuel o/f=0.86,
+      rocket  fac   ma=1184.69 
+  p,psia=4794,
+react  
+  fuel=H2(cr)  wt=1  t,k=148.2  
+    h,kj/mol=-5.016012  H 2 
+  oxid=O2(cr)  wt=1  t,k=115.4  
+    h,kj/mol=-10.9568  O 2 
+output  massf short 
+    plot p t rho m cp gam 
+end

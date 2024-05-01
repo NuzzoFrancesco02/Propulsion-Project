@@ -1,0 +1,34 @@
+
+ *******************************************************************************
+
+         NASA-GLENN CHEMICAL EQUILIBRIUM PROGRAM CEA2, MAY 21, 2004
+                   BY  BONNIE MCBRIDE AND SANFORD GORDON
+      REFS: NASA RP-1311, PART I, 1994 AND NASA RP-1311, PART II, 1996
+
+ *******************************************************************************
+
+
+
+ problem   case=preburner_left
+     hp   p,psia=4793,  t,f=1310
+ react
+   oxid=O2 wt=1  t,k=161
+   fuel=H2cr  wt=1  t,k=150
+     h,kj/mol=1.870079  H2CR H2CR
+
+ WARNING!! H2CR            NOT RECOGNIZED (INPUT)
+
+ WARNING!! H2CR            NOT RECOGNIZED (INPUT)
+ output  short
+     plot p t m cp gam
+ end
+
+ YOUR ASSIGNED TEMPERATURE  150.00K FOR H2cr           
+IS OUTSIDE ITS TEMPERATURE RANGE20000.00 TO     0.00K (REACT)
+
+ ERROR IN REACTANTS DATASET (INPUT)
+
+ FATAL ERROR IN DATASET (INPUT)
+
+
+

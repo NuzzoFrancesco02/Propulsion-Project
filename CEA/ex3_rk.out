@@ -1,0 +1,93 @@
+
+ *******************************************************************************
+
+         NASA-GLENN CHEMICAL EQUILIBRIUM PROGRAM CEA2, MAY 21, 2004
+                   BY  BONNIE MCBRIDE AND SANFORD GORDON
+      REFS: NASA RP-1311, PART I, 1994 AND NASA RP-1311, PART II, 1996
+
+ *******************************************************************************
+
+
+
+ problem   case=ex3_rk
+       rocket  equilibrium  tcest,k=3800
+   p,bar=70,
+ react
+   oxid=NH4CLO4(I) wt=0.68  t,k=298.15
+   fuel=AL(cr) wt=0.05  t,k=298.15
+   fuel=HTPB  wt=0.27  t,k=298.15
+     h,kj/mol=-58  C 7.075 H 10.65 O 0.223 N 0.063
+ output  short
+     plot t m ivac
+ end
+
+
+
+
+
+              THEORETICAL ROCKET PERFORMANCE ASSUMING EQUILIBRIUM
+
+           COMPOSITION DURING EXPANSION FROM INFINITE AREA COMBUSTOR
+
+ Pin =  1015.3 PSIA
+ CASE = ex3_rk         
+
+             REACTANT                    WT FRACTION      ENERGY      TEMP
+                                          (SEE NOTE)     KJ/KG-MOL      K  
+ OXIDANT     NH4CLO4(I)                   1.0000000   -295767.000    298.150
+ FUEL        AL(cr)                       0.1562500         0.000    298.150
+ FUEL        HTPB                         0.8437500    -58000.000    298.150
+
+ O/F=    2.12500  %FUEL= 32.000000  R,EQ.RATIO= 2.508938  PHI,EQ.RATIO= 3.778777
+
+                 CHAMBER   THROAT
+ Pinf/P            1.0000   1.8190
+ P, BAR            70.000   38.483
+ T, K             1886.75  1659.35
+ RHO, KG/CU M    8.7816 0 5.4953 0
+ H, KJ/KG        -1868.18 -2315.54
+ U, KJ/KG        -2665.30 -3015.84
+ G, KJ/KG        -21623.0 -19689.4
+ S, KJ/(KG)(K)    10.4702  10.4702
+
+ M, (1/n)          19.680   19.701
+ MW, MOL WT        19.329   19.348
+ (dLV/dLP)t      -1.00216 -1.00421
+ (dLV/dLT)p        1.0142   1.0342
+ Cp, KJ/(KG)(K)    2.0022   2.0377
+ GAMMAs            1.2737   1.2776
+ SON VEL,M/SEC     1007.6    945.9
+ MACH NUMBER        0.000    1.000
+
+ PERFORMANCE PARAMETERS
+
+ Ae/At                      1.0000
+ CSTAR, M/SEC               1346.7
+ CF                         0.7024
+ Ivac, M/SEC                1686.3
+ Isp, M/SEC                  945.9
+
+
+ MOLE FRACTIONS
+
+ ALCL3            0.00005  0.00001
+ ALOHCL2          0.00004  0.00001
+ CH4              0.00047  0.00104
+ *CO              0.36153  0.35990
+ *CO2             0.00651  0.00800
+ *CL              0.00001  0.00000
+ *H               0.00005  0.00001
+ HCN              0.00010  0.00006
+ HCL              0.11163  0.11193
+ *H2              0.41323  0.41357
+ H2O              0.03091  0.02989
+ NH3              0.00011  0.00010
+ *N2              0.05746  0.05755
+ AL2O3(a)         0.01786  0.01792
+
+  * THERMODYNAMIC PROPERTIES FITTED TO 20000.K
+
+ NOTE. WEIGHT FRACTION OF FUEL IN TOTAL FUELS AND OF OXIDANT IN TOTAL OXIDANTS
+
+
+

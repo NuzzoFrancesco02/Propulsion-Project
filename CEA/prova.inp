@@ -1,0 +1,9 @@
+problem    o/f=0.89,
+    rocket  equilibrium  frozen  nfz=1 
+  p,bar=4793,
+react  
+  fuel=H2(cr)  wt=1  t,k=148.2  
+    h,kj/mol=-5.016  H 2 
+  oxid=O2(cr)  wt=1  t,k=115.4  
+    h,kj/mol=-10.9568  O 2 
+end

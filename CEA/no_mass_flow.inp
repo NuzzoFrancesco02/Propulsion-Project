@@ -1,0 +1,8 @@
+problem   case=hyd
+      tp   t,k=23.7,  p,psia=298,
+react  
+  fuel=H2(cr)  wt=1  t,k=23.7  
+    h,kj/mol=-8.824  H 2 
+output  short 
+    plot p t rho h m cp gam  
+ end

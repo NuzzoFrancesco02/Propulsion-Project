@@ -1,0 +1,80 @@
+
+ *******************************************************************************
+
+         NASA-GLENN CHEMICAL EQUILIBRIUM PROGRAM CEA2, MAY 21, 2004
+                   BY  BONNIE MCBRIDE AND SANFORD GORDON
+      REFS: NASA RP-1311, PART I, 1994 AND NASA RP-1311, PART II, 1996
+
+ *******************************************************************************
+
+
+
+ problem   case=prova_matlab o/f=0.86,
+     rocket  fac   ma=1184.69
+   p,psia=4793,
+ react
+   fuel=H2(cr)  wt=1  t,k=148.2
+     h,kj/mol=-5.016012  H 2
+   oxid=O2(cr)  wt=1  t,k=30.4
+     h,kj/mol=-10.9568  O 2
+ output  massf short
+     plot p t rho h m cp gam
+ end
+
+
+
+
+
+              THEORETICAL ROCKET PERFORMANCE ASSUMING EQUILIBRIUM
+
+            COMPOSITION DURING EXPANSION FROM FINITE AREA COMBUSTOR
+
+ Pin =  4793.0 PSIA
+ MDOT/Ac =  1184.690 (KG/S)/M**2      Pinj/Pinf =  1.001399
+ CASE = prova_matlab   
+
+             REACTANT                    WT FRACTION      ENERGY      TEMP
+                                          (SEE NOTE)     KJ/KG-MOL      K  
+ FUEL        H2(cr)                       1.0000000     -5016.012    148.200
+ OXIDANT     O2(cr)                       1.0000000    -10956.800     30.400
+
+ O/F=    0.86000  %FUEL= 53.763441  R,EQ.RATIO= 9.228701  PHI,EQ.RATIO= 9.228701
+
+                 INJECTOR  COMB END  THROAT
+ Pinj/P            1.0000   1.0028   1.8788
+ P, BAR            330.46   329.54   175.89
+ T, K              978.89   978.53   826.79
+ RHO, KG/CU M    1.5224 1 1.5187 1 9.5939 0
+ H, KJ/KG        -1496.09 -1499.13 -2753.17
+ U, KJ/KG        -3666.76 -3668.99 -4586.55
+ G, KJ/KG        -34751.1 -34744.8 -30843.5
+ S, KJ/(KG)(K)    33.9721  33.9752  33.9752
+
+ M, (1/n)           3.750    3.750    3.750
+ (dLV/dLP)t      -1.00000 -1.00000 -1.00000
+ (dLV/dLT)p        1.0000   1.0000   1.0000
+ Cp, KJ/(KG)(K)    8.3492   8.3487   8.1888
+ GAMMAs            1.3616   1.3617   1.3714
+ SON VEL,M/SEC     1719.2   1718.9   1585.6
+ MACH NUMBER        0.000    0.045    1.000
+
+ PERFORMANCE PARAMETERS
+
+ Ae/At                      12.842   1.0000
+ CSTAR, M/SEC               2169.3   2169.3
+ CF                         0.0360   0.7309
+ Ivac, M/SEC               27896.8   2741.9
+ Isp, M/SEC                   78.0   1585.6
+
+
+ MASS FRACTIONS
+
+ *H2              0.47938  0.47938  0.47938
+ H2O              0.52062  0.52062  0.52062
+
+  * THERMODYNAMIC PROPERTIES FITTED TO 20000.K
+
+ NOTE. WEIGHT FRACTION OF FUEL IN TOTAL FUELS AND OF OXIDANT IN TOTAL OXIDANTS
+
+
+

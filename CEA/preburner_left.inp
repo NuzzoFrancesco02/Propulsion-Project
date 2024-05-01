@@ -1,0 +1,9 @@
+problem   case=preburner_left
+    hp   p,psia=4793,  t,f=1310
+react  
+  oxid=O2 wt=1  t,k=161  
+  fuel=H2cr  wt=1  t,k=150  
+    h,kj/mol=1.870079  H2CR H2CR 
+output  short 
+    plot p t m cp gam 
+end

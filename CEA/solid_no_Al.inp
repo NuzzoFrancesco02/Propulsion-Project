@@ -1,0 +1,10 @@
+problem    o/f=8,
+      rocket  equilibrium  frozen  nfz=2  tcest,k=3800
+  p,bar=70,
+  sup,ae/at=40,
+react  
+  oxid=O2(L) wt=1  t,k=90  
+  fuel=H2(L) wt=1  t,k=20  
+output  short 
+    plot o/f ivac isp  
+end

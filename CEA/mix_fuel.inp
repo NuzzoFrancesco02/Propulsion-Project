@@ -1,0 +1,10 @@
+problem   case=mix_fuel
+    tp   t,k=978.51,  p,bar=329.54,
+react  
+  fuel=H2 wt=.4603  t,k=978.51  
+  fuel=H2O wt=.4999  t,k=978.51  
+  fuel=H2(cr)  wt=0.0397  t,k=51.5  
+    h,kj/mol=-7.53905  H 2 
+output  short 
+    plot p t rho h m cp gam 
+end
