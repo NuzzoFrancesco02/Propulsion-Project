@@ -1,0 +1,11 @@
+problem   case=%s o/f=%f,
+    rocket  fac   ma=%f 
+  p,psia=%f,
+react  
+  fuel=H2(cr)  wt=1  t,k=%f  
+    h,kj/mol=%f  H 2 
+  oxid=O2(cr)  wt=1  t,k=%f
+    h,kj/mol=%f  O 2
+output  massf short 
+    plot p t rho h m cp gam
+end
