@@ -75,10 +75,10 @@ P_pre_pump = 1.72; % Pressure before the pump (psia)
 T_pre_pump = 23.7; % Temperature before the pump (K)
 
 h_pre_pump = -4401; % Enthalpy before the pump (23.7 K, 1.72 MPa)
-h_pre_pump = 48.692; % Enthalpy before the pump (23.7 K, 1.72 MPa)
+%h_pre_pump = 48.692; % Enthalpy before the pump (23.7 K, 1.72 MPa)
 
 h_post_pump = -3749; % Enthalpy after the pump (51.5 K, 41.07 MPa)
-h_post_pump = 697.76; % Enthalpy after the pump (51.5 K, 41.07 MPa)
+%h_post_pump = 697.76; % Enthalpy after the pump (51.5 K, 41.07 MPa)
 
 H_m_dot = 70.3; % Mass flow rate of the fuel
 
@@ -87,7 +87,7 @@ W_pump = H_m_dot .* (h_post_pump - h_pre_pump);
 
 % Calculate temperature after the turbine
 T_pre_turb = sol.T;
-T_after_turb = T_pre_turb - W_pump ./ (sol.cp .* m_tot_new' .* turb_eff_mech);
+T_after_turb = T_pre_turb - W_pump ./ (sol.cp .* m_tot_new' .* turb_eff_mech)
 
 % Calculate temperature after isentropic process
 T_after_iso = T_pre_turb + (T_after_turb - T_pre_turb) ./ pump_eff_iso;
@@ -176,8 +176,8 @@ struct2table(preburner_fuel);
 % Define parameters for the oxygen line
 D_i = convlength(7.43,'in','m'); % Inner diameter (m)
 L = convlength(4.25,'in','m'); % Length (m)
-O_F = 0.6103; % Oxidizer-to-fuel ratio
-%O_F = 0.1:0.1:10;
+O_F = 0.6; % Oxidizer-to-fuel ratio
+O_F = 0.1:0.1:10;
 P = 4812; % Pressure (psia)
 
 % Define properties for the oxygen and fuel streams
@@ -212,6 +212,10 @@ Ox = struct('properties',properties,'products',products);
 %% PUMP OX
 
 % Define parameters for the oxidizer pump
+pump_eff_mech = 0.758; % Mechanical efficiency of the pump
+boost_eff_mech = 0.718;
+pump_eff_iso = 0.98; % Isentropic efficiency of the pump
+turb_eff_mech = 0.746; % Mechanical efficiency of the turbine
 P_after_boost = 27.89; % Pressure after the boost (psia)
 boost_eff_mech = 0.718; % Mechanical efficiency of the boost
 boost_eff_iso = 0.98; % Isentropic efficiency of the boost
@@ -221,21 +225,21 @@ O_m_dot = 508.9; % Mass flow rate of the oxidizer
 O_m_dot_boost = 41.73; % Mass flow rate of the boosted oxidizer
 
 h_pre_pump = -397.35; % Enthalpy before the pump (93.7 K, 2.9 MPa)
-h_pre_pump = -4.0298;
+%h_pre_pump = -4.0298;
 h_post_pump = -363.65; % Enthalpy after the pump (104.3 K, 27.89 MPa)
-h_post_pump = -3.0415;
+%h_post_pump = -3.0415;
 
 % Calculate work done by the pump and the boost
 W_pump = O_m_dot * (h_post_pump - h_pre_pump);
 h_pre_boost = -366.89; % Enthalpy before the boost (104.37 K, 26.96 MPa)
-h_pre_boost = -3.0543;
+%h_pre_boost = -3.0543;
 h_post_boost = -338.5; % Enthalpy after the boost (114.82 K, 48.06 MPa)
-h_post_boost = -338.5;
+%h_post_boost = -2.1516;
 W_boost = O_m_dot_boost .* (h_post_boost - h_pre_boost);
 
 % Calculate temperature after the turbine
 T_pre_turb = sol.T;
-T_after_turb = T_pre_turb - (W_pump + W_boost) ./ (turb_eff_mech .* m_tot .* Ox.properties.cp);
+T_after_turb = T_pre_turb - (W_pump *pump_eff_mech + W_boost * boost_eff_mech) ./ (turb_eff_mech .* m_tot .* Ox.properties.cp)
 Ox.properties.T_before_main = T_after_turb;
 
 % Calculate temperature after isentropic process
