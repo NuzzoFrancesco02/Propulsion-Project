@@ -101,7 +101,9 @@ function [sol, products] = cea_main_input(H_cool, H_fuel, H_ox, O2_main,P,ae_at)
             products.Mass_fraction = [products.Mass_fraction; ' '];
         end
         products.Mass_fraction = [products.Mass_fraction; var_M_fraction];
-        delete(['input_',case_name,'.inp']); delete(['input_',case_name,'.out']);
+        if i ~= length(ae_at)
+            delete(['input_',case_name,'.inp']); delete(['input_',case_name,'.out']);
+        end
         cd(currentDir)
     end
     

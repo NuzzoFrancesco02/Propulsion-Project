@@ -1,9 +1,19 @@
 function [sol, products] = cea_preburner_input(struct1, struct2, O_F, P, mass_area_ratio)
+    flag_O_F = 0; flag_mass_ratio = 0;
+    if length(mass_area_ratio)>1
+        vec = mass_area_ratio;
+        flag_mass_ratio = 1;
+    elseif length(O_F)>1
+        vec = O_F;
+        flag_O_F = 1;
+    else
+        vec = 1;
+    end
     % Initialize solution struct
-    sol = struct('P',[],'T',[],'rho',[],'h',[],'Mm',[],'cp',[],'gamma',[]);
+    sol = struct('P',[],'T',[],'rho',[],'h',[],'Mm',[],'cp',[],'gamma',[],'c',[],'Mach',[]);
     
     % Loop through each oxidizer to fuel ratio
-    for i = 1 : length(O_F)
+    for i = 1 : length(vec)
         % Open input file and read content
         case_name = 'preburner';
         file_input = fopen(['input_',case_name,'.txt'],'r');
@@ -17,8 +27,13 @@ function [sol, products] = cea_preburner_input(struct1, struct2, O_F, P, mass_ar
         
         % Create and open input file for CEA
         file_case = fopen(['input_',case_name,'.inp'],'w');
-        fprintf(file_case,str,case_name,O_F(i),mass_area_ratio,P,struct1.T,struct1.h,struct2.T,struct2.h);
-        
+        if flag_O_F
+            fprintf(file_case,str,case_name,O_F(i),mass_area_ratio,P,struct1.T,struct1.h,struct2.T,struct2.h);
+        elseif flag_mass_ratio
+            fprintf(file_case,str,case_name,O_F,mass_area_ratio(i),P,struct1.T,struct1.h,struct2.T,struct2.h);
+        else
+            fprintf(file_case,str,case_name,O_F,mass_area_ratio,P,struct1.T,struct1.h,struct2.T,struct2.h);
+        end
         filename = ['input_',case_name];  % Nome del file da passare a FCEA2
 
         % Execute FCEA2
@@ -58,6 +73,8 @@ function [sol, products] = cea_preburner_input(struct1, struct2, O_F, P, mass_ar
         sol.Mm = [sol.Mm; colonna2(9)];
         sol.cp = [sol.cp; colonna2(12)];
         sol.gamma = [sol.gamma; colonna2(13)];
+        sol.c = [sol.c; colonna2(14)];
+        sol.Mach = [sol.Mach; colonna2(15)];
 
         % Find "MASS FRACTIONS" section
         posizione_mass_fraction = strfind(str, 'FRACTIONS');
@@ -92,7 +109,9 @@ function [sol, products] = cea_preburner_input(struct1, struct2, O_F, P, mass_ar
             products.Mass_fraction = [products.Mass_fraction; ' '];
         end
         products.Mass_fraction = [products.Mass_fraction; var_M_fraction];
-        delete(['input_',case_name,'.inp']); delete(['input_',case_name,'.out']);
+        if i ~= length(O_F)
+            delete(['input_',case_name,'.inp']); delete(['input_',case_name,'.out']);
+        end
         cd(currentDir)
     end
     

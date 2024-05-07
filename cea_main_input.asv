@@ -18,7 +18,7 @@ function [sol, products] = cea_main_input(H_cool, H_fuel, H_ox, O2_main,P,ae_at)
         
         % Create and open input file for CEA
         file_case = fopen(['input_',case_name,'.inp'],'w');
-        fprintf(file_case,str,'rocket',P,ae_at,H_cool.Mf,H_cool.T,H_fuel.Mf,H_fuel.T,H_ox.Mf,H_fuel.T,...
+        fprintf(file_case,str,'rocket',P,ae_at(i),H_cool.Mf,H_cool.T,H_fuel.Mf,H_fuel.T,H_ox.Mf,H_fuel.T,...
             O2_main.Mf,O2_main.T,O2_main.h);
         
         filename = ['input_',case_name];  % Nome del file da passare a FCEA2
@@ -36,9 +36,11 @@ function [sol, products] = cea_main_input(H_cool, H_fuel, H_ox, O2_main,P,ae_at)
         str = fscanf(file_output,'%c');
         
         % Find "COMB END" section
-        posizione_comb_end = strfind(str, 'CHAMBER');
+        posizione_comb_end = strfind(str, 'AFTER POINT 2');
         sezione_comb_end = extractAfter(str, posizione_comb_end(1));
-        fine_sezione_mass_fraction = strfind(sezione_comb_end, 'PERFORMANCE PARAMETERS');
+        posizione_comb_end = strfind(sezione_comb_end,'CHAMBER');
+        sezione_comb_end = extractAfter(sezione_comb_end, posizione_comb_end(1));
+        fine_sezione_mass_fraction = strfind(sezione_comb_end, 'MASS FRACTIONS');
         sezione_comb_end = sezione_comb_end(1:fine_sezione_mass_fraction(1));
         
         % Extract relevant data from "COMB END" section
@@ -62,7 +64,10 @@ function [sol, products] = cea_main_input(H_cool, H_fuel, H_ox, O2_main,P,ae_at)
         sol.gamma = [sol.gamma; exit(13)];
         sol.sound = [sol.sound; exit(14)];
         sol.Mach = [sol.Mach; exit(15)];
-
+        sol.cf = [sol.cf; exit(17)];
+        sol.Isp_s = [sol.Isp_s; exit(18)];
+        sol.Isp_v = [sol.Isp_v; exit(19)];
+        
         % Find "MASS FRACTIONS" section
         posizione_mass_fraction = strfind(str, 'FRACTIONS');
         sezione_mass_fraction = extractAfter(str, posizione_mass_fraction(1));
@@ -79,7 +84,7 @@ function [sol, products] = cea_main_input(H_cool, H_fuel, H_ox, O2_main,P,ae_at)
         var_M_fraction = zeros(number_products,1);
         var_name = {};
         flag = 1;
-        if length(O_F) == 1
+        if length(ae_at) == 1
             flag = 0;
         end
         for j = 1 : number_products + 1
@@ -91,11 +96,12 @@ function [sol, products] = cea_main_input(H_cool, H_fuel, H_ox, O2_main,P,ae_at)
             end
         end
         products.name = [products.name; var_name(:,end)];
-        if length(O_F) > 1
+        if length(ae_at) > 1
             products.name = [products.name; '----'];
             products.Mass_fraction = [products.Mass_fraction; ' '];
         end
         products.Mass_fraction = [products.Mass_fraction; var_M_fraction];
+        
         delete(['input_',case_name,'.inp']); delete(['input_',case_name,'.out']);
         cd(currentDir)
     end
