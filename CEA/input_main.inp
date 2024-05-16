@@ -4,9 +4,9 @@ problem   case=rocket,
   sup,ae/at=69,
 react  
   fuel=H2 wt=0.028660  t,k=255.400000
-  fuel=H2 wt=0.073115  t,k=886.485976
-  fuel=H2 wt=0.039327  t,k=886.485976
-  oxid=O2(cr)  wt=0.858898  t,k=104.300000
+  fuel=H2 wt=0.073110  t,k=886.114407
+  fuel=H2 wt=0.039338  t,k=886.114407
+  oxid=O2(cr)  wt=0.858892  t,k=104.300000
     h,kj/mol=-11.791558  O 2
 output  massf short
     plot p t rho m cp gam mach cf isp

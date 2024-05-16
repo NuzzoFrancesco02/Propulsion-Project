@@ -50,7 +50,11 @@ function [sol, products] = cea_main_input(H_cool, H_fuel, H_ox, O2_main,P,ae_at)
             riga = righe_comb_end{j};
             valori = strsplit(riga);
             if numel(valori) >= 3
-                exit = [exit; str2double(valori{end})];
+                str_val = valori{end};
+                if ~isnan(strfind(str_val(end-2:end),'-'))
+                    str_val = replace(str_val,'-','e-')
+                end
+                exit = [exit; str2double(str_val)];
             end
         end
         
@@ -60,13 +64,13 @@ function [sol, products] = cea_main_input(H_cool, H_fuel, H_ox, O2_main,P,ae_at)
         sol.rho = [sol.rho; exit(4)];
         sol.h = [sol.h; exit(5)];
         sol.Mm = [sol.Mm; exit(9)];
-        sol.cp = [sol.cp; exit(12)];
-        sol.gamma = [sol.gamma; exit(13)];
-        sol.sound = [sol.sound; exit(14)];
-        sol.Mach = [sol.Mach; exit(15)];
+        sol.cp = [sol.cp; exit(10)];
+        sol.gamma = [sol.gamma; exit(11)];
+        sol.sound = [sol.sound; exit(12)];
+        sol.Mach = [sol.Mach; exit(13)];
         sol.cf = [sol.cf; exit(17)];
-        sol.Isp_s = [sol.Isp_s; exit(18)];
-        sol.Isp_v = [sol.Isp_v; exit(19)];
+        sol.Isp_s = [sol.Isp_s; exit(19)];
+        sol.Isp_v = [sol.Isp_v; exit(18)];
         
         % Find "MASS FRACTIONS" section
         posizione_mass_fraction = strfind(str, 'FRACTIONS');

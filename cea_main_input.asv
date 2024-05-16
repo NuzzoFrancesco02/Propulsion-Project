@@ -50,7 +50,12 @@ function [sol, products] = cea_main_input(H_cool, H_fuel, H_ox, O2_main,P,ae_at)
             riga = righe_comb_end{j};
             valori = strsplit(riga);
             if numel(valori) >= 3
-                exit = [exit; str2double(valori{end})];
+                str_val = valori{end};
+                if ~isnan(strfind(str_val(end-2:end),'-'))
+                    replace()
+                    str_val = {str_val(1:k), 'e-', str_val(k:end)};
+                end
+                exit = [exit; str2double(str_val)];
             end
         end
         
@@ -101,8 +106,9 @@ function [sol, products] = cea_main_input(H_cool, H_fuel, H_ox, O2_main,P,ae_at)
             products.Mass_fraction = [products.Mass_fraction; ' '];
         end
         products.Mass_fraction = [products.Mass_fraction; var_M_fraction];
-        
-        delete(['input_',case_name,'.inp']); delete(['input_',case_name,'.out']);
+        if i ~= length(ae_at)
+            delete(['input_',case_name,'.inp']); delete(['input_',case_name,'.out']);
+        end
         cd(currentDir)
     end
     

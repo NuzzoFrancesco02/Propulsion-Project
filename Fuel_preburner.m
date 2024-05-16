@@ -61,7 +61,7 @@ if isvector(mass_area_ratio)
 elseif isvector(O_F)
     vec_size = length(O_F);
 end
-properties = struct('P_bar',sol.P,'T_before_main',[],'cp',sol.cp,'Mm',sol.Mm,'m_dot',m_tot_new*ones(length(vec_size),1),'gamma',sol.gamma);
+properties = struct('P_bar',sol.P,'T_before_main',[],'cp',sol.cp,'Mm',sol.Mm,'m_dot',m_tot_new*ones(length(vec_size),1),'gamma',sol.gamma,'rho',sol.rho);
 Fuel = struct('properties',properties,'products',products);
 %% PUMP FUEL
 
@@ -168,16 +168,16 @@ J = (H.rho * u_fuel^2) / (O.rho * u_ox^2);
 
 % Creation of a struct to store preburner fuel properties
 preburner_fuel = struct('A', A_preb_fuel, 'V', V_preb, 'L', L_preb, ...
-                        'N_holes', N * 2, 'D_hole_ox', D_1hole_ox, ...
-                        'D_hole_fuel', D_1hole_fuel);
+                        'N_holes', N * 2, 'D_hole_ox', 2* R_1hole_ox, ...
+                        'D_hole_fuel', 2*R_1hole_e_fuel);
 struct2table(preburner_fuel);
 %% OX LINE
 
 % Define parameters for the oxygen line
 D_i = convlength(7.43,'in','m'); % Inner diameter (m)
 L = convlength(4.25,'in','m'); % Length (m)
-O_F = 0.6; % Oxidizer-to-fuel ratio
-O_F = 0.1:0.1:10;
+O_F = 0.60991; % Oxidizer-to-fuel ratio
+%O_F = 0.1:0.1:1.5;
 P = 4812; % Pressure (psia)
 
 % Define properties for the oxygen and fuel streams
@@ -206,14 +206,21 @@ CEA_results_ox = struct2table(sol) % Convert structure to table
 struct2table(products); % Convert structure to table
 
 % Define properties and store oxygen information
-properties = struct('P_bar',sol.P,'T_before_main',[],'cp',sol.cp,'Mm',sol.Mm,'m_dot',m_tot*ones(length(O_F),1),'gamma',sol.gamma);
+properties = struct('P_bar',sol.P,'T_before_main',[],'cp',sol.cp,'Mm',sol.Mm,'m_dot',m_tot*ones(length(O_F),1),'gamma',sol.gamma,'rho',sol.rho);
 Ox = struct('properties',properties,'products',products);
-
+if length(O_F)>1  
+    plot(O_F,sol.T,'LineWidth',2)
+    grid on;
+    yline(739,'LineWidth',1.5,'LineStyle','-.','Color',"#A2142F");
+    ylabel('T turbine'); xlabel('O/F')
+    xline(0.60991,'LineWidth',2,'LineStyle',':','Color',"#EDB120")
+    xticks(0.1:0.1:1.5)
+    legend('T(O/F)','T = 739K','O/F = 0.60991')
+end
 %% PUMP OX
 
 % Define parameters for the oxidizer pump
 pump_eff_mech = 0.758; % Mechanical efficiency of the pump
-boost_eff_mech = 0.718;
 pump_eff_iso = 0.98; % Isentropic efficiency of the pump
 turb_eff_mech = 0.746; % Mechanical efficiency of the turbine
 P_after_boost = 27.89; % Pressure after the boost (psia)
@@ -239,7 +246,7 @@ W_boost = O_m_dot_boost .* (h_post_boost - h_pre_boost);
 
 % Calculate temperature after the turbine
 T_pre_turb = sol.T;
-T_after_turb = T_pre_turb - (W_pump *pump_eff_mech + W_boost * boost_eff_mech) ./ (turb_eff_mech .* m_tot .* Ox.properties.cp)
+T_after_turb = T_pre_turb - (W_pump + W_boost) ./ (turb_eff_mech .* m_tot .* Ox.properties.cp)
 Ox.properties.T_before_main = T_after_turb;
 
 % Calculate temperature after isentropic process
@@ -248,17 +255,14 @@ T_after_iso = T_pre_turb + (T_after_turb - T_pre_turb) ./ pump_eff_iso;
 % Calculate pressure at the end
 P_end = sol.P .* (T_pre_turb ./ T_after_iso) .^ (sol.gamma ./ (1 - sol.gamma));
 Ox.properties.P_bar = P_end;
-if length(O_F) > 1
-    plot(O_F,T_after_turb,'LineWidth',2)
-end
 
 %% INJECTION PLATE OX LINE
 % Definition of the cross-sectional area of the oxidizer preburner duct
-A_preb_ox = 0.028;
+A_preb_ox = pi*D_i^2/4;
 
 % Calculation of the velocity of the oxidizer gas flow through the preburner
 vel = sol.c * sol.Mach;
-Q = vel * A_preb_fuel;
+Q = vel * A_preb_ox;
 
 % Injection time and calculation of the required oxidizer volume in the preburner
 t = 0.001434;
@@ -268,11 +272,11 @@ V_preb = Q * t;
 L_preb = V_preb / A_preb_ox;
 
 % Definition of the diameter of a single injection hole, the area of the hole, and the discharge coefficient
-R_ox = 0.914*1e-3;
-R_e_fuel = (4.7+0.648)*1e-3; R_i_fuel = 4.7*1e-3; %pag 25 NASA
+R_ox = 1.031/2*1e-3;
+R_e_fuel = (4.93/2+0.58)*1e-3; R_i_fuel = 4.93/2*1e-3; %pag 25 NASA
 A_1hole_ox = pi*R_ox^2;
 A_1hole_fuel = pi*(R_e_fuel^2-R_i_fuel^2);
-cd = 0.6;
+cd = 0.76;
 
 % Calculation of the pressure difference between the system pressure and the pressure in the fuel and oxidizer feed system
 delta_P_fuel = -convpres(P, 'psi', 'Pa') + convpres(5310, 'psi', 'Pa');
@@ -290,22 +294,25 @@ N = min(N_ox, N_fuel)
 % Calculation of the new dimensions of the injection holes
 A_1hole_ox = A_hole_ox / N;
 A_1hole_fuel = A_hole_fuel / N;
-D_1hole_fuel = sqrt(4 * A_1hole_fuel / pi);
-D_1hole_ox = sqrt(4 * A_1hole_ox / pi);
+R_1hole_ox = sqrt(A_1hole_ox / pi)
+R_1hole_e_fuel = sqrt(A_1hole_fuel / pi + R_i_fuel^2)
 
 % Calculation of the percentage of the total hole area compared to the preburner fuel area
-A_perc = (A_hole_ox + A_hole_fuel) / A_preb_fuel * 100;
+A_perc = (A_hole_ox + A_hole_fuel) / A_preb_ox * 100;
 
 % Calculation of the velocity ratio between fuel and oxidizer
+u_ox = cd * sqrt(2 * delta_P_ox / O.rho);
+u_fuel = cd * sqrt(2 * delta_P_fuel / H.rho);
+
 VR = u_fuel / u_ox;
 
 % Calculation of a density-related parameter
 J = (H.rho * u_fuel^2) / (O.rho * u_ox^2);
 
 % Creation of a struct to store preburner oxidizer properties
-preburner_ox = struct('A', A_preb_fuel, 'V', V_preb, 'L', L_preb, ...
-                        'N_holes', N * 2, 'D_hole_ox', D_1hole_ox, ...
-                        'D_hole_fuel', D_1hole_fuel);
+preburner_ox = struct('A', A_preb_ox, 'V', V_preb, 'L', L_preb, ...
+                        'N_holes', N * 2, 'D_hole_ox', 2*R_1hole_ox, ...
+                        'D_hole_fuel', 2*R_1hole_e_fuel);
 struct2table(preburner_ox);
 
 %% Results
@@ -358,13 +365,15 @@ mass_fraction_fuel_H2O = Fuel_m_dot_H2O / m_tot;
 mass_fraction_ox_H2O = OX_m_dot_H2O / m_tot;
 mass_fraction_main_O2 = O2_main.m_dot / m_tot;
 
-H2_cool = struct('Mf',mass_fraction_coolant,'T',255.4,'P',[]);
+H2_cool = struct('Mf',mass_fraction_coolant,'T',255.4,'P',21.85*1e6);
 H2_fuel = struct('Mf',mass_fraction_fuel_H2,'T',Fuel.properties.T_before_main,'P',Fuel.properties.P_bar);
 H2_ox = struct('Mf',mass_fraction_ox_H2,'T',Ox.properties.T_before_main,'P',Ox.properties.P_bar);
 O2_main.Mf = mass_fraction_main_O2;
 
 ae_at = 69;
+
 [sol,prod] = cea_main_input(H2_cool,H2_fuel,H2_ox,O2_main,2871,ae_at);
+main = struct2table(sol)
 %% plot
 subplot(2,2,1)
 plot(ae_at,sol.T,'LineWidth',2)

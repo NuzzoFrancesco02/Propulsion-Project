@@ -61,7 +61,15 @@ function [sol, products] = cea_preburner_input(struct1, struct2, O_F, P, mass_ar
             riga = righe_comb_end{j};
             valori = strsplit(riga);
             if numel(valori) >= 3
-                colonna2 = [colonna2; str2double(valori{end-1})];
+                if j == 5
+                    str_val = valori{end-3};
+                else
+                    str_val = valori{end-1};
+                end
+                if ~isnan(strfind(str_val(end-2:end),'-'))
+                    str_val = replace(str_val,'-','e-')
+                end
+                colonna2 = [colonna2; str2double(str_val)];
             end
         end
         
